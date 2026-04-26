@@ -226,26 +226,28 @@
         </div>
 
         <div id="register-screen" class="auth-screen">
-            <header>
-                <h1>Nova<span>Conta</span></h1>
-                <p>Crie seu perfil local</p>
-            </header>
-            <div class="input-group">
-                <label>Nome</label>
-                <div class="input-wrapper"><i data-lucide="user"></i><input type="text" id="reg-name" placeholder="Seu nome"></div>
-            </div>
-            <div class="input-group">
-                <label>E-mail</label>
-                <div class="input-wrapper"><i data-lucide="mail"></i><input type="email" id="reg-email" placeholder="seu@email.com"></div>
-            </div>
-            <div class="input-group">
-                <label>Senha</label>
-                <div class="input-wrapper"><i data-lucide="lock"></i><input type="password" id="reg-pass" placeholder="Senha forte"></div>
-            </div>
-            <button class="btn" onclick="handleRegister()">Criar Agora</button>
-            <div style="text-align:center; margin-top:15px; font-size:0.85rem; color:var(--text-muted)">
-                Já é membro? <span onclick="toggleAuth('login-screen')" style="color:var(--primary); cursor:pointer; font-weight:700">Login</span>
-            </div>
+            <form id="reg-form" onsubmit="event.preventDefault(); handleRegister();">
+                <header>
+                    <h1>Nova<span>Conta</span></h1>
+                    <p>Crie seu perfil local</p>
+                </header>
+                <div class="input-group">
+                    <label>Nome</label>
+                    <div class="input-wrapper"><i data-lucide="user"></i><input type="text" id="reg-name" placeholder="Seu nome" required></div>
+                </div>
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <div class="input-wrapper"><i data-lucide="mail"></i><input type="email" id="reg-email" placeholder="seu@email.com" required></div>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <div class="input-wrapper"><i data-lucide="lock"></i><input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" minlength="6" required></div>
+                </div>
+                <button type="submit" class="btn">Criar Agora</button>
+                <div style="text-align:center; margin-top:15px; font-size:0.85rem; color:var(--text-muted)">
+                    Já é membro? <span onclick="toggleAuth('login-screen')" style="color:var(--primary); cursor:pointer; font-weight:700">Login</span>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -348,12 +350,17 @@
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value.toLowerCase().trim();
             const pass = document.getElementById('reg-pass').value;
-            if(!name || !email || !pass) return alert("Preencha tudo!");
+            
+            // Verificação extra de segurança via JS
+            if(!name || !email || !pass) return;
+
             let users = JSON.parse(localStorage.getItem('nexus_users') || "[]");
             if(users.find(u => u.email === email)) return alert("E-mail já existe.");
+            
             users.push({ name, email, pass, transactions: [] });
             localStorage.setItem('nexus_users', JSON.stringify(users));
-            alert("Conta criada!"); toggleAuth('login-screen');
+            alert("Conta criada!"); 
+            toggleAuth('login-screen');
         }
 
         function handleLogin() {
@@ -445,18 +452,14 @@
             const selectedMonth = document.getElementById('filter-month').value;
             hist.innerHTML = "";
             
-            // Variáveis para o período selecionado (filtros)
             let tIn = 0, tOut = 0;
-            // Variáveis para o saldo histórico total (independente de filtros)
             let totalHistoryIn = 0, totalHistoryOut = 0;
 
-            // Calcula o Saldo Total Histórico
             currentUser.transactions.forEach(t => {
                 if(t.type === 'in') totalHistoryIn += t.amount;
                 else totalHistoryOut += t.amount;
             });
 
-            // Filtra as transações para exibição e cálculos do período
             const filtered = currentUser.transactions.filter(t => {
                 const matchPeriod = isAllTime || t.monthKey === selectedMonth;
                 const matchType = currentFilter === 'all' || t.type === currentFilter;
@@ -485,18 +488,15 @@
 
             if(!filtered.length) hist.innerHTML = `<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Vazio.</p>`;
 
-            // Atualiza os labels conforme o estado "Tudo"
             const labelSuffix = isAllTime ? " TOTAL" : " DO MÊS";
             document.getElementById('label-in').innerText = "GANHOS" + labelSuffix;
             document.getElementById('label-out').innerText = "DESPESAS" + labelSuffix;
             document.getElementById('label-month').innerText = "SALDO" + labelSuffix;
 
-            // Valores do Período (Filtro)
             document.getElementById('in-val').innerText = `R$ ${tIn.toFixed(2)}`;
             document.getElementById('out-val').innerText = `R$ ${tOut.toFixed(2)}`;
             document.getElementById('month-val').innerText = `R$ ${(tIn - tOut).toFixed(2)}`;
             
-            // Valor Total Histórico (Acumulado de sempre)
             document.getElementById('total-val').innerText = `R$ ${(totalHistoryIn - totalHistoryOut).toFixed(2)}`;
             
             lucide.createIcons();
