@@ -83,6 +83,38 @@
             padding: 10px; font-size: 0.8rem; margin-top: 20px;
         }
 
+        /* --- FILTERS --- */
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #2d3748;
+            background: var(--input-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .month-selector {
+            padding: 8px;
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: white;
+            border: 1px solid #2d3748;
+            font-size: 0.8rem;
+        }
+
         /* --- MODAL POLÍTICAS --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -99,7 +131,7 @@
         .modal-content h2 { margin-bottom: 20px; color: var(--primary); }
         .modal-content h3 { margin: 25px 0 10px 0; font-size: 1.1rem; border-left: 4px solid var(--primary); padding-left: 10px; }
         .modal-content p, .modal-content li { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 10px; }
-        .modal-content ul { padding-left: 20px; }
+        .modal-content ul, .modal-content ol { padding-left: 20px; margin-bottom: 15px; }
         .close-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--text-muted); }
 
         /* --- DASHBOARD --- */
@@ -112,8 +144,22 @@
         
         .history-item { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 18px 22px; background: rgba(255,255,255,0.02); 
+            padding: 16px 20px; background: rgba(255,255,255,0.02); 
             border-radius: 16px; margin-bottom: 12px; 
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .item-info { flex-grow: 1; }
+        .item-values { text-align: right; margin-right: 15px; }
+        
+        .date-badge {
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            display: inline-block;
+            margin-top: 4px;
         }
 
         .action-btn { background: transparent; border: none; cursor: pointer; padding: 5px; border-radius: 6px; }
@@ -135,26 +181,24 @@
         <div class="modal-content">
             <i data-lucide="x" class="close-modal" onclick="closeModal()"></i>
             <h2>🔐 Políticas e Termos de Uso</h2>
-            <p>Ao utilizar o Nexus Finance, o usuário concorda com as seguintes diretrizes:</p>
+            <p>Ao utilizar o Nexus Finance, você concorda com as seguintes diretrizes:</p>
             <ul>
-                <li><strong>Privacidade de Dados:</strong> O Nexus Finance é uma ferramenta baseada em LocalStorage. Todos os seus dados são salvos exclusivamente no seu navegador. Nós não temos acesso a esses dados em servidores externos.</li>
-                <li><strong>Segurança:</strong> Se você limpar o cache do navegador, as informações serão excluídas permanentemente. Recomendamos não usar senhas reais.</li>
-                <li><strong>Responsabilidade:</strong> Ferramenta de caráter informativo. Não nos responsabilizamos por decisões financeiras ou perda de dados.</li>
+                <li><strong>Privacidade:</strong> Todos os seus dados são salvos exclusivamente no seu navegador (LocalStorage).</li>
+                <li><strong>Segurança:</strong> Se você limpar os dados do navegador, as informações serão excluídas permanentemente.</li>
+                <li><strong>Responsabilidade:</strong> Ferramenta para fins informativos. Não nos responsabilizamos por perdas de dados.</li>
                 <li><strong>Uso Gratuito:</strong> O sistema é mantido por contribuições voluntárias.</li>
             </ul>
 
             <h3>🚀 Passo a Passo: Como Utilizar</h3>
             <ol>
-                <li><strong>Criando sua Conta:</strong> Clique em "Registrar", preencha seus dados e faça o login.</li>
-                <li><strong>Dashboard:</strong> Acompanhe seus Ganhos (verde), Despesas (vermelho) e Saldo total.</li>
-                <li><strong>Transações:</strong> Preencha descrição, valor e tipo para salvar novos registros.</li>
+                <li><strong>Criando sua Conta:</strong> Vá em "Registrar", preencha seus dados e faça o login.</li>
+                <li><strong>Dashboard:</strong> Acompanhe seus Ganhos (verde), Despesas (vermelho) e Saldo.</li>
+                <li><strong>Transações:</strong> Preencha a descrição, valor e data para salvar novos registros.</li>
+                <li><strong>Filtros:</strong> Use o seletor de mês ou o botão "Tudo" para navegar no seu histórico.</li>
                 <li><strong>Editar/Excluir:</strong> Use os ícones no histórico para ajustar ou remover entradas.</li>
-                <li><strong>Sair:</strong> Sempre clique em "Sair" para proteger seu acesso em computadores compartilhados.</li>
+                <li><strong>Sair:</strong> Clique em "Sair" para encerrar sua sessão local com segurança.</li>
             </ol>
-            <p style="margin-top:20px; background: rgba(99,102,241,0.1); padding: 15px; border-radius: 10px;">
-                <strong>Dica de Ouro 💡:</strong> O site funciona offline após o primeiro acesso, pois os dados são locais!
-            </p>
-            <button class="btn" onclick="closeModal()">Entendi</button>
+            <button class="btn" style="margin-top: 25px;" onclick="closeModal()">Entendi</button>
         </div>
     </div>
 
@@ -162,7 +206,7 @@
         <div id="login-screen" class="auth-screen active">
             <header>
                 <h1>Nexus<span>Finance</span></h1>
-                <p>Bem-vindo de volta!</p>
+                <p>Gestão de transações simplificada</p>
             </header>
             <div class="input-group">
                 <label>E-mail</label>
@@ -184,7 +228,7 @@
         <div id="register-screen" class="auth-screen">
             <header>
                 <h1>Nova<span>Conta</span></h1>
-                <p>Comece sua gestão hoje</p>
+                <p>Crie seu perfil local</p>
             </header>
             <div class="input-group">
                 <label>Nome</label>
@@ -216,22 +260,23 @@
 
         <div class="summary">
             <div class="card-box" style="border-bottom: 4px solid var(--success);">
-                <small>GANHOS</small><h2 id="in-val" style="color:var(--success)">R$ 0,00</h2>
+                <small id="label-in">GANHOS</small><h2 id="in-val" style="color:var(--success)">R$ 0,00</h2>
             </div>
             <div class="card-box" style="border-bottom: 4px solid var(--danger);">
-                <small>DESPESAS</small><h2 id="out-val" style="color:var(--danger)">R$ 0,00</h2>
+                <small id="label-out">DESPESAS</small><h2 id="out-val" style="color:var(--danger)">R$ 0,00</h2>
             </div>
             <div class="card-box">
-                <small>SALDO</small><h2 id="total-val">R$ 0,00</h2>
+                <small id="label-total">SALDO</small><h2 id="total-val">R$ 0,00</h2>
             </div>
         </div>
 
         <div class="main-grid">
-            <div class="card-box">
+            <div class="card-box" style="height: fit-content;">
                 <h3 id="form-title">Nova Transação</h3>
                 <input type="hidden" id="t-id">
                 <div class="input-group"><input type="text" id="t-desc" placeholder="Descrição"></div>
                 <div class="input-group"><input type="number" id="t-amount" placeholder="Valor"></div>
+                <div class="input-group"><input type="date" id="t-date"></div>
                 <div class="input-group">
                     <select id="t-type">
                         <option value="in">Entrada (+)</option>
@@ -243,7 +288,20 @@
             </div>
 
             <div class="card-box">
-                <h3>Histórico</h3>
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h3>Histórico</h3>
+                    <div style="display:flex; gap:8px; align-items: center;">
+                        <button class="filter-btn" id="btn-all-time" onclick="toggleAllTime()">Tudo</button>
+                        <input type="month" id="filter-month" class="month-selector" onchange="updateUI()">
+                    </div>
+                </div>
+
+                <div class="filters-container">
+                    <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">Todos</button>
+                    <button class="filter-btn" id="filter-in" onclick="setFilter('in')">Entradas</button>
+                    <button class="filter-btn" id="filter-out" onclick="setFilter('out')">Saídas</button>
+                </div>
+
                 <div id="history"></div>
             </div>
         </div>
@@ -257,6 +315,12 @@
     <script>
         lucide.createIcons();
         let currentUser = null;
+        let currentFilter = 'all';
+        let isAllTime = false;
+
+        const now = new Date();
+        document.getElementById('filter-month').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        document.getElementById('t-date').valueAsDate = now;
 
         function openModal() { document.getElementById('modal-politicas').style.display = 'flex'; }
         function closeModal() { document.getElementById('modal-politicas').style.display = 'none'; }
@@ -265,6 +329,16 @@
             document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             lucide.createIcons();
+        }
+
+        function toggleAllTime() {
+            isAllTime = !isAllTime;
+            const btn = document.getElementById('btn-all-time');
+            const monthInput = document.getElementById('filter-month');
+            btn.classList.toggle('active', isAllTime);
+            monthInput.disabled = isAllTime;
+            monthInput.style.opacity = isAllTime ? "0.4" : "1";
+            updateUI();
         }
 
         function handleRegister() {
@@ -276,8 +350,7 @@
             if(users.find(u => u.email === email)) return alert("E-mail já existe.");
             users.push({ name, email, pass, transactions: [] });
             localStorage.setItem('nexus_users', JSON.stringify(users));
-            alert("Conta criada!");
-            toggleAuth('login-screen');
+            alert("Conta criada!"); toggleAuth('login-screen');
         }
 
         function handleLogin() {
@@ -291,32 +364,46 @@
                 document.getElementById('app-screen').classList.add('active');
                 document.getElementById('user-name-display').innerText = `Olá, ${user.name.split(' ')[0]}`;
                 updateUI();
-            } else { alert("Dados inválidos."); }
+            } else alert("Dados inválidos.");
         }
 
         function handleLogout() { location.reload(); }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filters-container .filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`filter-${filter}`).classList.add('active');
+            updateUI();
+        }
 
         function saveTransaction() {
             const id = document.getElementById('t-id').value;
             const desc = document.getElementById('t-desc').value;
             const amount = parseFloat(document.getElementById('t-amount').value);
             const type = document.getElementById('t-type').value;
-            if(!desc || isNaN(amount)) return alert("Dados inválidos.");
+            const rawDate = document.getElementById('t-date').value;
+
+            if(!desc || isNaN(amount) || !rawDate) return alert("Preencha tudo!");
 
             let users = JSON.parse(localStorage.getItem('nexus_users'));
             const uIdx = users.findIndex(u => u.email === currentUser.email);
 
+            const dateObj = new Date(rawDate + "T12:00:00");
+            const dateStr = dateObj.toLocaleDateString('pt-BR');
+            const monthKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+
+            const newT = { id: id ? parseInt(id) : Date.now(), desc, amount, type, date: dateStr, monthKey, rawDate };
+
             if(id) {
                 const tIdx = users[uIdx].transactions.findIndex(t => t.id == id);
-                users[uIdx].transactions[tIdx] = { ...users[uIdx].transactions[tIdx], desc, amount, type };
+                users[uIdx].transactions[tIdx] = newT;
             } else {
-                users[uIdx].transactions.push({ id: Date.now(), desc, amount, type, date: new Date().toLocaleDateString() });
+                users[uIdx].transactions.push(newT);
             }
 
             localStorage.setItem('nexus_users', JSON.stringify(users));
             currentUser = users[uIdx];
-            resetForm();
-            updateUI();
+            resetForm(); updateUI();
         }
 
         function editTransaction(id) {
@@ -325,25 +412,26 @@
             document.getElementById('t-desc').value = t.desc;
             document.getElementById('t-amount').value = t.amount;
             document.getElementById('t-type').value = t.type;
+            document.getElementById('t-date').value = t.rawDate;
             document.getElementById('form-title').innerText = "Editar Transação";
             document.getElementById('btn-save').innerText = "Atualizar";
             document.getElementById('btn-cancel-edit').style.display = "block";
         }
 
         function deleteTransaction(id) {
-            if(!confirm("Excluir transação?")) return;
+            if(!confirm("Excluir?")) return;
             let users = JSON.parse(localStorage.getItem('nexus_users'));
             const uIdx = users.findIndex(u => u.email === currentUser.email);
             users[uIdx].transactions = users[uIdx].transactions.filter(t => t.id !== id);
             localStorage.setItem('nexus_users', JSON.stringify(users));
-            currentUser = users[uIdx];
-            updateUI();
+            currentUser = users[uIdx]; updateUI();
         }
 
         function resetForm() {
             document.getElementById('t-id').value = "";
             document.getElementById('t-desc').value = "";
             document.getElementById('t-amount').value = "";
+            document.getElementById('t-date').valueAsDate = new Date();
             document.getElementById('form-title').innerText = "Nova Transação";
             document.getElementById('btn-save').innerText = "Salvar";
             document.getElementById('btn-cancel-edit').style.display = "none";
@@ -351,22 +439,43 @@
 
         function updateUI() {
             const hist = document.getElementById('history');
+            const selectedMonth = document.getElementById('filter-month').value;
             hist.innerHTML = "";
             let tIn = 0, tOut = 0;
-            [...currentUser.transactions].reverse().forEach(t => {
+
+            const filtered = currentUser.transactions.filter(t => {
+                const matchPeriod = isAllTime || t.monthKey === selectedMonth;
+                const matchType = currentFilter === 'all' || t.type === currentFilter;
+                return matchPeriod && matchType;
+            }).sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
+
+            filtered.forEach(t => {
                 if(t.type === 'in') tIn += t.amount; else tOut += t.amount;
                 hist.innerHTML += `
                     <div class="history-item">
-                        <div><strong>${t.desc}</strong><br><small>${t.date}</small></div>
-                        <div style="display:flex; align-items:center; gap:10px">
-                            <span style="font-weight:700; color:${t.type === 'in' ? 'var(--success)' : 'var(--danger)'}">
-                                R$ ${t.amount.toFixed(2)}
+                        <div class="item-info">
+                            <strong>${t.desc}</strong><br>
+                            <span class="date-badge">${t.date}</span>
+                        </div>
+                        <div class="item-values">
+                            <span style="font-weight:700; font-size: 1.05rem; color:${t.type === 'in' ? 'var(--success)' : 'var(--danger)'}">
+                                ${t.type === 'in' ? '+' : '-'} R$ ${t.amount.toFixed(2)}
                             </span>
+                        </div>
+                        <div style="display:flex; gap:5px">
                             <button class="action-btn btn-edit" onclick="editTransaction(${t.id})"><i data-lucide="edit-2" style="width:16px"></i></button>
                             <button class="action-btn btn-delete" onclick="deleteTransaction(${t.id})"><i data-lucide="trash-2" style="width:16px"></i></button>
                         </div>
                     </div>`;
             });
+
+            if(!filtered.length) hist.innerHTML = `<p style="text-align:center; color:var(--text-muted); margin-top:20px;">Vazio.</p>`;
+
+            const suffix = isAllTime ? " TOTAL" : "";
+            document.getElementById('label-in').innerText = "GANHOS" + suffix;
+            document.getElementById('label-out').innerText = "DESPESAS" + suffix;
+            document.getElementById('label-total').innerText = "SALDO" + suffix;
+
             document.getElementById('in-val').innerText = `R$ ${tIn.toFixed(2)}`;
             document.getElementById('out-val').innerText = `R$ ${tOut.toFixed(2)}`;
             document.getElementById('total-val').innerText = `R$ ${(tIn - tOut).toFixed(2)}`;
